@@ -20,6 +20,18 @@ namespace WarehouseSystem.Data
         public DbSet<Position> Positions { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Stock> StockRecords { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Check>().ToTable("Check");
+            modelBuilder.Entity<CheckEntry>().ToTable("CheckEntry");
+            modelBuilder.Entity<Employee>().ToTable("Employee");
+            modelBuilder.Entity<Import>().ToTable("Import");
+            modelBuilder.Entity<Invoice>().ToTable("Invoice");
+            modelBuilder.Entity<Position>().ToTable("Position");
+            modelBuilder.Entity<Product>().ToTable("Product");
+            modelBuilder.Entity<Stock>().ToTable("Stock");
+        }
     }
 
 }
