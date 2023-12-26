@@ -8,6 +8,8 @@ namespace WarehouseSystem.Models
 
         public DateTime Time { get; set; }
 
+        public Employee Responsible { get; set; }
+
         public ICollection<Import> Imports { get; set; }
 
     }
