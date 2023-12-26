@@ -1,4 +1,11 @@
+using WarehouseSystem.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+//регистрация контекста БД
+builder.Services.AddDbContext<StockContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("StockContext") ?? throw new InvalidOperationException("Connection string 'StockContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

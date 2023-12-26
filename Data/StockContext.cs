@@ -21,6 +21,7 @@ namespace WarehouseSystem.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Stock> StockRecords { get; set; }
 
+        //Метод создания таблиц в БД с кастомными названиями
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Check>().ToTable("Check");
