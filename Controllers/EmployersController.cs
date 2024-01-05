@@ -33,24 +33,6 @@ namespace WarehouseSystem.Controllers
             return View(await _context.Employees.ToListAsync());
         }
 
-        // GET: Employers/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var employee = await _context.Employees
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            return View(employee);
-        }
-
         // GET: Employers/Create
         public IActionResult Create()
         {
