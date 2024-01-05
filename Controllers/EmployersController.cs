@@ -24,7 +24,7 @@ namespace WarehouseSystem.Controllers
         // GET: Employers
         public async Task<IActionResult> Index()
         {
-            var employees = _context.Employees.Include(e => e.Position);
+            var employees = _context.Employees.Include(e => e.Position).Where(employees => employees.Actual != false);
 
             foreach (Employee e in employees)
             {

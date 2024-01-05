@@ -24,6 +24,8 @@ namespace WarehouseSystem.Models
         [Display(Name = "Должность")]
         public int PositionID { get; set; }
 
+        public bool? Actual { get; set; }
+
         [Display(Name = "Должность")]
         public Position? Position { get; set; }
 
