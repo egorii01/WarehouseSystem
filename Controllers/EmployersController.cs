@@ -13,10 +13,12 @@ namespace WarehouseSystem.Controllers
     public class EmployersController : Controller
     {
         private readonly StockContext _context;
+        private readonly ILogger<Employee> _logger;
 
-        public EmployersController(StockContext context)
+        public EmployersController(StockContext context, ILogger<Employee> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Employers
@@ -52,6 +54,7 @@ namespace WarehouseSystem.Controllers
         // GET: Employers/Create
         public IActionResult Create()
         {
+            positionsDropdownList();
             return View();
         }
 
@@ -60,14 +63,19 @@ namespace WarehouseSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,LastName,FirstName,MiddleName")] Employee employee)
+        public async Task<IActionResult> Create([Bind("LastName,FirstName,MiddleName, PositionID")] Employee employee)
         {
+
+            _logger.LogInformation("Post Create called");
+            _logger.LogInformation("ModelState.IsValid: {0}", ModelState.IsValid.ToString());
+
             if (ModelState.IsValid)
             {
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            positionsDropdownList(employee.PositionID);
             return View(employee);
         }
 
@@ -79,47 +87,58 @@ namespace WarehouseSystem.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees.FindAsync(id);
+            var employee = await _context.Employees.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
             if (employee == null)
             {
                 return NotFound();
             }
+            positionsDropdownList(employee.PositionID);
             return View(employee);
         }
 
         // POST: Employers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,LastName,FirstName,MiddleName")] Employee employee)
+        public async Task<IActionResult> EditPost(int? id)
         {
-            if (id != employee.Id)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var employeeToUpdate = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id);
+
+            if (await TryUpdateModelAsync<Employee>(employeeToUpdate, 
+                "", 
+                e => e.FirstName, e => e.MiddleName, e => e.LastName, e => e.PositionID)
+            )
             {
                 try
                 {
-                    _context.Update(employee);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException /* ex */)
                 {
-                    if (!EmployeeExists(employee.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+
+            positionsDropdownList(employeeToUpdate.PositionID);
+            return View(employeeToUpdate);
+        }
+
+        private void positionsDropdownList(object selectedPosition = null)
+        {
+            var positionsQuery = from p in _context.Positions
+            orderby p.Id
+            select p;
+
+            ViewBag.PositionID = new SelectList(positionsQuery.AsNoTracking(), "Id", "Name", selectedPosition);
         }
 
         // GET: Employers/Delete/5

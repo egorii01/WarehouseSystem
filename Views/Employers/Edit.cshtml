@@ -1,12 +1,11 @@
 @model WarehouseSystem.Models.Employee
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Редактирование сотрудника";
 }
 
-<h1>Edit</h1>
+<h1>Редактировать сотрудника</h1>
 
-<h4>Employee</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -27,6 +26,13 @@
                 <label asp-for="MiddleName" class="control-label"></label>
                 <input asp-for="MiddleName" class="form-control" />
                 <span asp-validation-for="MiddleName" class="text-danger"></span>
+            </div>
+            <div class="form-group info-input">
+                <label asp-for="PositionID" class="control-label"></label>
+                <select asp-for="PositionID" class="form-control" asp-items="ViewBag.PositionID">
+                    <option value="">-- Выберите должность --</option>
+                </select>
+                <span asp-validation-for="PositionID" class="text-danger" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
