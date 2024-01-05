@@ -1,2 +1,4 @@
 bin/*
 obj/Debug/*
+StockContext.db-shm
+StockContext.db-wal
