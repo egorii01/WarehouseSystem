@@ -132,6 +132,7 @@ namespace WarehouseSystem.Controllers
             }
 
             var employee = await _context.Employees
+                .Include(e => e.Position)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (employee == null)
             {
