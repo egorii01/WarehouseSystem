@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WarehouseSystem.Models
 {
@@ -16,7 +17,9 @@ namespace WarehouseSystem.Models
 
         public int Quantity { get; set; }
 
+        [ForeignKey(nameof(Invoice))]
         public int InvoiceID { get; set; }
+        public Invoice Invoice { get; set; }
 
     }
 
