@@ -19,7 +19,10 @@
                 <span asp-validation-for="ResponsibleID" class="text-danger" />
             </div>
             <div class="form-group info-input">
-                
+                <label asp-for="Imports" class="control-label"></label>
+                <div class="border rounded">
+                    @{await Html.RenderPartialAsync((string)ViewBag.CurrentImportPageName);}
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Записать" class="btn btn-primary" />

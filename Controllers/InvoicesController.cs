@@ -66,6 +66,7 @@ namespace WarehouseSystem.Controllers
         public IActionResult Create()
         {
             employeesDropdownList();
+            ViewBag.CurrentImportPageName = "Imports";
             return View();
         }
 
@@ -84,6 +85,12 @@ namespace WarehouseSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(invoice);
+        }
+
+        public IActionResult CreateImport(int? id)
+        {
+            ViewBag.CurrentImportPageName = "CreateImport";
+            return View("Create");
         }
 
         private void employeesDropdownList(object selectedPosition = null)

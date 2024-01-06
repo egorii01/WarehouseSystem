@@ -1,0 +1,20 @@
+@model IEnumerable<WarehouseSystem.Models.Import>
+
+<p>
+    <a asp-controller="Invoices" asp-action="CreateImport">Добавить запись о поступлении</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Product)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
