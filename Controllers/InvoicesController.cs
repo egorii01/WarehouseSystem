@@ -43,11 +43,47 @@ namespace WarehouseSystem.Controllers
                 return NotFound();
             }
 
-            var invoice = await _context.Invoices
-                .FirstOrDefaultAsync(m => m.Id == id);
+            /*var invoice = await _context.Invoices
+                .FirstOrDefaultAsync(m => m.Id == id);*/
+
+            //var invoice = _context.Invoices;
+
+            Invoice? invoice = await _context.Invoices
+                .Where(i => i.Id == id)
+                .Include(i => i.Imports)
+                .FirstOrDefaultAsync();
+
+
             if (invoice == null)
             {
                 return NotFound();
+            }
+            else
+            {
+                _logger.LogInformation("invoice is not null");
+                ICollection<Import> imports = new List<Import>();
+                foreach (Import import in invoice.Imports)
+                {
+                    Import? import1 = await _context.Imports
+                        .Where(i => i.Id == import.Id)
+                        .Include(i => i.Product)
+                        .Include(nameof(Invoice))
+                        .FirstOrDefaultAsync();
+
+                    if (import1 != null)
+                    {
+                        imports.Add(import1);
+                    }
+                }
+
+                if (imports.Count() > 0) {
+                    invoice.Imports = imports;
+                }
+
+                foreach (Import import in invoice.Imports)
+                {
+                    _logger.LogInformation($"import.Product.Name: {import.Product.Name}, import.Quantity: {import.Quantity}");
+                }
             }
 
             return View(invoice);
