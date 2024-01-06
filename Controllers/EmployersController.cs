@@ -148,10 +148,31 @@ namespace WarehouseSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            //ищем "удаляемого" сотрудника
             var employee = await _context.Employees.FindAsync(id);
             if (employee != null)
             {
-                _context.Employees.Remove(employee);
+                //проставляем флаг актуальности
+                employee.Actual = false;
+                
+                if (await TryUpdateModelAsync<Employee>(employee, 
+                    "", 
+                    e => e.Actual)
+                )
+                {
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateException /* ex */)
+                    {
+                        ModelState.AddModelError("", "Unable to save changes. " +
+                            "Try again, and if the problem persists, " +
+                            "see your system administrator.");
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+
             }
 
             await _context.SaveChangesAsync();
