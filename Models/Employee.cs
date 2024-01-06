@@ -29,6 +29,14 @@ namespace WarehouseSystem.Models
         [Display(Name = "Должность")]
         public Position? Position { get; set; }
 
+        public string FullName
+        {
+            get
+            {
+                return LastName + " " + FirstName + " " + MiddleName;
+            }
+        }
+
     }
 
 }

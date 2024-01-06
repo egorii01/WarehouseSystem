@@ -22,6 +22,23 @@ namespace WarehouseSystem.Controllers
         // GET: Invoices
         public async Task<IActionResult> Index()
         {
+
+            /*var employee = _context.Employees.Where(e => e.Actual != false);
+            var employees = employee.Include(e => e.Position);
+
+            foreach (Employee e in employees)
+            {
+                _context.Positions.Where(p => p.Id == e.Position.Id).Load();
+            }
+            return View(await employees.ToListAsync());*/
+
+            var invoices = _context.Invoices.Include(i => i.Responsible);
+
+            foreach (Invoice i in invoices)
+            {
+                _context.Employees.Where(e => e.Id == i.ResponsibleID).Load();
+            }
+
             return View(await _context.Invoices.ToListAsync());
         }
 
