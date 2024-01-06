@@ -24,13 +24,14 @@ namespace WarehouseSystem.Controllers
         // GET: Employers
         public async Task<IActionResult> Index()
         {
-            var employees = _context.Employees.Include(e => e.Position).Where(employees => employees.Actual != false);
+            var employee = _context.Employees.Where(e => e.Actual != false);
+            var employees = employee.Include(e => e.Position);
 
             foreach (Employee e in employees)
             {
                 _context.Positions.Where(p => p.Id == e.Position.Id).Load();
             }
-            return View(await _context.Employees.ToListAsync());
+            return View(await employees.ToListAsync());
         }
 
         // GET: Employers/Create
