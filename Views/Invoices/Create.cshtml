@@ -1,31 +1,35 @@
 @model WarehouseSystem.Models.Invoice
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Регистрация поступления";
 }
 
-<h1>Create</h1>
+<h1>Новое поступление</h1>
 
-<h4>Invoice</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Time" class="control-label"></label>
-                <input asp-for="Time" class="form-control" />
-                <span asp-validation-for="Time" class="text-danger"></span>
+            <div class="form-group info-input">
+                <label asp-for="ResponsibleID" class="control-label">Менеджер</label>
+                <select asp-for="ResponsibleID" class="form-control" asp-items="ViewBag.ResponsibleID">
+                    <option value="">-- Выберите сотрудника --</option>
+                </select>
+                <span asp-validation-for="ResponsibleID" class="text-danger" />
+            </div>
+            <div class="form-group info-input">
+                
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Записать" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Назад к списку поступлений</a>
 </div>
 
 @section Scripts {

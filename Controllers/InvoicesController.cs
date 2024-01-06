@@ -13,10 +13,12 @@ namespace WarehouseSystem.Controllers
     public class InvoicesController : Controller
     {
         private readonly StockContext _context;
+        private readonly ILogger<Invoice> _logger;
 
-        public InvoicesController(StockContext context)
+        public InvoicesController(StockContext context, ILogger<Invoice> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Invoices
@@ -63,6 +65,7 @@ namespace WarehouseSystem.Controllers
         // GET: Invoices/Create
         public IActionResult Create()
         {
+            employeesDropdownList();
             return View();
         }
 
@@ -71,8 +74,9 @@ namespace WarehouseSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Time")] Invoice invoice)
+        public async Task<IActionResult> Create([Bind("Id,Time,ResponsibleID")] Invoice invoice)
         {
+
             if (ModelState.IsValid)
             {
                 _context.Add(invoice);
@@ -82,58 +86,20 @@ namespace WarehouseSystem.Controllers
             return View(invoice);
         }
 
-        // GET: Invoices/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        private void employeesDropdownList(object selectedPosition = null)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var invoice = await _context.Invoices.FindAsync(id);
-            if (invoice == null)
-            {
-                return NotFound();
-            }
-            return View(invoice);
+            var employeesQuery = from e in _context.Employees
+                orderby e.Id
+                where e.Actual != false
+                select e;
+
+            ViewBag.ResponsibleID = new SelectList(employeesQuery.AsNoTracking(), "Id", "FullName", selectedPosition);
+
         }
 
-        // POST: Invoices/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Time")] Invoice invoice)
-        {
-            if (id != invoice.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(invoice);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InvoiceExists(invoice.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(invoice);
-        }
-
-        // GET: Invoices/Delete/5
+        //не понятно, пригодится ли этот кусок кода...
+        /*// GET: Invoices/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -164,7 +130,7 @@ namespace WarehouseSystem.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
+        }*/
 
         private bool InvoiceExists(int id)
         {
