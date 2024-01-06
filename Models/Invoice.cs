@@ -1,6 +1,6 @@
 namespace WarehouseSystem.Models
 {
-
+    //фактура о поступлении
     public class Invoice
     {
 

@@ -1,6 +1,7 @@
 namespace WarehouseSystem.Models
 {
 
+    //поступление
     public class Import
     {
 

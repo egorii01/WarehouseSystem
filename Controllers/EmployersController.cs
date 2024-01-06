@@ -54,6 +54,7 @@ namespace WarehouseSystem.Controllers
 
             if (ModelState.IsValid)
             {
+                employee.Actual = true;
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -155,7 +156,7 @@ namespace WarehouseSystem.Controllers
                 //проставляем флаг актуальности
                 employee.Actual = false;
                 
-                if (await TryUpdateModelAsync<Employee>(employee, 
+                if (await TryUpdateModelAsync(employee, 
                     "", 
                     e => e.Actual)
                 )
