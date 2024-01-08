@@ -22,10 +22,12 @@ namespace WarehouseSystem.Controllers.ImportsController
             _logger.LogInformation("Get Create in Imports");
             
            //создаем объект импорта для модели
-           Import creatingImport = new Import();
-           creatingImport.InvoiceID = invoiceId;
-
-            return View();
+           Import creatingImport = new Import() 
+           {
+                InvoiceID = invoiceId
+           };
+           
+            return View(creatingImport);
         } 
 
     }
