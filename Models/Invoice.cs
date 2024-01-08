@@ -6,11 +6,11 @@ namespace WarehouseSystem.Models
     public class Invoice
     {
         
-        [Display(Name = "ID")]
+        [Display(Name = "№")]
         public int Id { get; set; }
 
         [DataType(DataType.DateTime)]
-        [Display(Name = "Время создания")]
+        [Display(Name = "Дата создания")]
         public DateTime Time { get; set; }
 
         [Display(Name = "ФИО ответственного")]
@@ -19,6 +19,7 @@ namespace WarehouseSystem.Models
         [Display(Name = "ФИО ответственного")]
         public Employee Responsible { get; set; }
 
+        [Display(Name = "Пришедшие товары")]
         public ICollection<Import> Imports { get; set; }
 
     }

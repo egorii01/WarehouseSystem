@@ -51,6 +51,7 @@ namespace WarehouseSystem.Controllers
             Invoice? invoice = await _context.Invoices
                 .Where(i => i.Id == id)
                 .Include(i => i.Imports)
+                .Include(i => i.Responsible)
                 .FirstOrDefaultAsync();
 
 
