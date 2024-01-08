@@ -34,6 +34,46 @@
             @Html.DisplayNameFor(model => model.Imports)
         </dt>
     </div>
+    
+    @{
+        if (Model.Imports.Count() <= 0)
+        {
+            <dd>Товары отсутствуют</dd>
+        }
+        else
+        {
+            <table class = "table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Imports.First().Product)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Imports.First().Quantity)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (Import import in Model.Imports)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => import.Product.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => import.Quantity)
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+    }
+
+    
+    
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Редактировать</a> |
