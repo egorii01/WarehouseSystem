@@ -17,9 +17,9 @@ namespace WarehouseSystem.Controllers.ImportsController
         }
 
         [HttpGet]
-        public IActionResult Create(string? name)
-        {
-            _logger.LogInformation($"name: {name}");
+        public IActionResult Create(string? invoice)
+        {   
+            
             return View();
         } 
 

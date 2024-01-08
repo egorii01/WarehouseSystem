@@ -23,6 +23,16 @@ namespace WarehouseSystem.Models
         public int InvoiceID { get; set; }
         public Invoice Invoice { get; set; }
 
+        public Import()
+        {
+
+        }
+
+        public Import(Invoice invoice)
+        {
+            Invoice = invoice;
+        }
+
     }
 
 }

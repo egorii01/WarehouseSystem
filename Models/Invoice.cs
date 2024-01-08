@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WarehouseSystem.Models
 {
@@ -21,6 +22,9 @@ namespace WarehouseSystem.Models
 
         [Display(Name = "Пришедшие товары")]
         public ICollection<Import> Imports { get; set; }
+
+        [NotMapped]
+        public string? TempGuid { get; set; }
 
         public Invoice()
         {

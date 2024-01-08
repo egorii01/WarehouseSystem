@@ -130,7 +130,21 @@ namespace WarehouseSystem.Controllers
         public IActionResult CreateImport()
         {
             _logger.LogInformation("Redirecting to imports create");
-            return RedirectToAction("Create", "Imports", new { name = "Loopa" });
+            return RedirectToAction("Create", "Imports", new { invoice = creatingInvoice });
+        }
+
+        [HttpPost]
+        public IActionResult CreateImport([Bind("Id,Time,ResponsibleID")] Invoice invoice)
+        {
+            
+                invoice.TempGuid = Guid.NewGuid().ToString();
+                _logger.LogInformation("POST Redirecting to imports create");
+                _logger.LogInformation($"invoice.Responsible: {invoice.ResponsibleID}");
+
+                //временно добавим фактуру в контекст бд (без коммита)
+                _context.Add(invoice);
+                return RedirectToAction("Create", "Imports", new { invoice = invoice.TempGuid });
+            
         }
 
         private void employeesDropdownList(object selectedPosition = null)

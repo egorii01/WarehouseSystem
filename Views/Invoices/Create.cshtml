@@ -9,7 +9,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" method="post">
+        <form name="invoiceForm" asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group info-input">
                 <label asp-for="ResponsibleID" class="control-label">Менеджер</label>
@@ -22,8 +22,20 @@
                 
                 <!--Тут нужна таблица товаров вроде-->
                 <p>
-                    <a asp-controller="Invoices" asp-action="CreateImport">Добавить товар к поступлению</a>
+                    <a asp-controller="Invoices" asp-action="CreateImport" id="addImport">Добавить товар к поступлению</a>
                 </p>
+                <script>
+                    const element = document.getElementById('addImport');
+                    element.onclick = (event) => {
+                        let form = document.forms.invoiceForm;
+                        form.action = "CreateImport";
+                        form.submit();
+
+                        //я хуй знает, работает ли это говно
+                        form.action = "Create"
+                        alert("Add import clicked");
+                    }
+                </script>
 
                 @{
                     if (Model.Imports.Count() <= 0)
