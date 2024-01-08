@@ -15,6 +15,8 @@ namespace WarehouseSystem.Controllers
         private readonly StockContext _context;
         private readonly ILogger<Invoice> _logger;
 
+        private Invoice? creatingInvoice;
+
         public InvoicesController(StockContext context, ILogger<Invoice> logger)
         {
             _context = context;
@@ -94,11 +96,18 @@ namespace WarehouseSystem.Controllers
         public IActionResult Create()
         {
             //создаем в представлении кода объекты поступления и списка импортов
-            Invoice model = new Invoice();
-            model.Imports = new List<Import>();
-            
+            if (creatingInvoice == null)
+            {
+                _logger.LogInformation("Creating invoice object");
+                creatingInvoice = new Invoice();
+            }
+            else
+            {
+                _logger.LogInformation("Invoice was created");
+            }
+
             employeesDropdownList();
-            return View(model);
+            return View(creatingInvoice);
         }
 
         // POST: Invoices/Create
@@ -116,6 +125,12 @@ namespace WarehouseSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(invoice);
+        }
+
+        public IActionResult CreateImport()
+        {
+            _logger.LogInformation("Redirecting to imports create");
+            return RedirectToAction("Create", "Imports", new { name = "Loopa" });
         }
 
         private void employeesDropdownList(object selectedPosition = null)

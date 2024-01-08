@@ -22,6 +22,11 @@ namespace WarehouseSystem.Models
         [Display(Name = "Пришедшие товары")]
         public ICollection<Import> Imports { get; set; }
 
+        public Invoice()
+        {
+            Imports = new List<Import>();
+        }
+
     }
 
 }
