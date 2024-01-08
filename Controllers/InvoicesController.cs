@@ -93,8 +93,12 @@ namespace WarehouseSystem.Controllers
         // GET: Invoices/Create
         public IActionResult Create()
         {
+            //создаем в представлении кода объекты поступления и списка импортов
+            Invoice model = new Invoice();
+            model.Imports = new List<Import>();
+            
             employeesDropdownList();
-            return View();
+            return View(model);
         }
 
         // POST: Invoices/Create

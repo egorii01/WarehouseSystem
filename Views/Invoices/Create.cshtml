@@ -20,6 +20,36 @@
             </div>
             <div class="form-group info-input">
                 
+                <!--Тут нужна таблица товаров вроде-->
+                <p>
+                    <a asp-controller="Imports" asp-action="Create">Добавить товар к поступлению</a>
+                </p>
+
+                @{
+                    if (Model.Imports.Count() <= 0)
+                    {
+                        <dd>Список товаров пуст</dd>
+                    }
+                    else
+                    {
+                        <table class = "table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Imports.First().Product)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Imports.First().Quantity)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    }
+                }
+
             </div>
             <div class="form-group">
                 <input type="submit" value="Записать" class="btn btn-primary" />
