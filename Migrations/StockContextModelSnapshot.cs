@@ -127,6 +127,9 @@ namespace WarehouseSystem.Migrations
                     b.Property<int>("ResponsibleID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("Saved")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("Time")
                         .HasColumnType("TEXT");
 

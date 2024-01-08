@@ -17,9 +17,21 @@ namespace WarehouseSystem.Controllers.ImportsController
         }
 
         [HttpGet]
-        public IActionResult Create(string? invoice)
+        public IActionResult Create()
         {   
+            _logger.LogInformation("Get Create in Imports");
+
+            Invoice? invoice = (Invoice?)TempData["invoice"];
+            if (invoice == null)
+            {
+                _logger.LogInformation("Invoice is null!");
+            }
+            else 
+            {
+                _logger.LogInformation($"invoice.ResponsibleID: {invoice.ResponsibleID}");
+            }
             
+
             return View();
         } 
 

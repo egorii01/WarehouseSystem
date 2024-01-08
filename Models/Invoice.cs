@@ -23,13 +23,7 @@ namespace WarehouseSystem.Models
         [Display(Name = "Пришедшие товары")]
         public ICollection<Import> Imports { get; set; }
 
-        [NotMapped]
-        public string? TempGuid { get; set; }
-
-        public Invoice()
-        {
-            Imports = new List<Import>();
-        }
+        public bool Saved { get; set; }
 
     }
 

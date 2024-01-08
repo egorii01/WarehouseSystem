@@ -95,16 +95,7 @@ namespace WarehouseSystem.Controllers
         // GET: Invoices/Create
         public IActionResult Create()
         {
-            //создаем в представлении кода объекты поступления и списка импортов
-            if (creatingInvoice == null)
-            {
-                _logger.LogInformation("Creating invoice object");
-                creatingInvoice = new Invoice();
-            }
-            else
-            {
-                _logger.LogInformation("Invoice was created");
-            }
+            //подгружаем из базы данных объект 
 
             employeesDropdownList();
             return View(creatingInvoice);
@@ -134,16 +125,25 @@ namespace WarehouseSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateImport([Bind("Id,Time,ResponsibleID")] Invoice invoice)
+        public IActionResult CreateImport([Bind("Id,Time,ResponsibleID")] Invoice submitInvoice)
         {
-            
-                invoice.TempGuid = Guid.NewGuid().ToString();
-                _logger.LogInformation("POST Redirecting to imports create");
-                _logger.LogInformation($"invoice.Responsible: {invoice.ResponsibleID}");
 
-                //временно добавим фактуру в контекст бд (без коммита)
-                _context.Add(invoice);
-                return RedirectToAction("Create", "Imports", new { invoice = invoice.TempGuid });
+                if (creatingInvoice == null)
+                {
+                    _logger.LogInformation("creatingInvoice is null");
+                }
+                else
+                {
+                    _logger.LogInformation("creatingInvoice is not null");
+                }
+
+                _logger.LogInformation("POST Redirecting to imports create");
+                _logger.LogInformation($"invoice.Time: {submitInvoice.Time}");
+                _logger.LogInformation($"invoice.ResponsibleID: {submitInvoice.ResponsibleID}");
+
+                TempData["Invoice"] = submitInvoice;
+
+                return RedirectToAction("Create", "Imports");
             
         }
 
