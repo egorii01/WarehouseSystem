@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WarehouseSystem.Data;
 
@@ -10,9 +11,11 @@ using WarehouseSystem.Data;
 namespace WarehouseSystem.Migrations
 {
     [DbContext(typeof(StockContext))]
-    partial class StockContextModelSnapshot : ModelSnapshot
+    [Migration("20240108162002_AddSavedFlagToInvoice")]
+    partial class AddSavedFlagToInvoice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
@@ -124,13 +127,13 @@ namespace WarehouseSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("ResponsibleID")
+                    b.Property<int>("ResponsibleID")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("Saved")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("Time")
+                    b.Property<DateTime>("Time")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -252,7 +255,9 @@ namespace WarehouseSystem.Migrations
                 {
                     b.HasOne("WarehouseSystem.Models.Employee", "Responsible")
                         .WithMany()
-                        .HasForeignKey("ResponsibleID");
+                        .HasForeignKey("ResponsibleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Responsible");
                 });

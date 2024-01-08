@@ -15,8 +15,6 @@ namespace WarehouseSystem.Controllers
         private readonly StockContext _context;
         private readonly ILogger<Invoice> _logger;
 
-        private Invoice? creatingInvoice;
-
         public InvoicesController(StockContext context, ILogger<Invoice> logger)
         {
             _context = context;
@@ -27,14 +25,16 @@ namespace WarehouseSystem.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var invoices = _context.Invoices.Include(i => i.Responsible);
+            var invoices = _context.Invoices
+                .Where(i => i.Saved == true)
+                .Include(i => i.Responsible);
 
             foreach (Invoice i in invoices)
             {
                 _context.Employees.Where(e => e.Id == i.ResponsibleID).Load();
             }
 
-            return View(await _context.Invoices.ToListAsync());
+            return View(await invoices.ToListAsync());
         }
 
         // GET: Invoices/Details/5
@@ -93,9 +93,26 @@ namespace WarehouseSystem.Controllers
         }
 
         // GET: Invoices/Create
-        public IActionResult Create()
+        public IActionResult Create(bool? returned)
         {
-            //подгружаем из базы данных объект 
+            //подгружаем из базы данных объект фактуры для представления (либо последний несохраненный, либо новый)
+            Invoice? creatingInvoice = _context.Invoices
+                .Where(i => i.Saved != true)
+                .Include(i => i.Imports)
+                .FirstOrDefault();
+
+            if (creatingInvoice == null)
+            {
+                _logger.LogInformation("Creating new invoice");
+                creatingInvoice = new Invoice();
+            }
+            else if (returned != true) 
+            {
+                _logger.LogInformation("Unsaved invoice exists. Clearing data...");
+
+                creatingInvoice.ClearData();
+                _context.SaveChanges();
+            }
 
             employeesDropdownList();
             return View(creatingInvoice);
@@ -121,29 +138,49 @@ namespace WarehouseSystem.Controllers
         public IActionResult CreateImport()
         {
             _logger.LogInformation("Redirecting to imports create");
-            return RedirectToAction("Create", "Imports", new { invoice = creatingInvoice });
+            return RedirectToAction("Create", "Imports");
         }
 
         [HttpPost]
-        public IActionResult CreateImport([Bind("Id,Time,ResponsibleID")] Invoice submitInvoice)
+        public async Task<IActionResult> CreateImport([Bind("Id,Time,ResponsibleID")] Invoice invoice)
         {
 
-                if (creatingInvoice == null)
-                {
-                    _logger.LogInformation("creatingInvoice is null");
-                }
-                else
-                {
-                    _logger.LogInformation("creatingInvoice is not null");
-                }
-
                 _logger.LogInformation("POST Redirecting to imports create");
-                _logger.LogInformation($"invoice.Time: {submitInvoice.Time}");
-                _logger.LogInformation($"invoice.ResponsibleID: {submitInvoice.ResponsibleID}");
+                _logger.LogInformation($"invoice.Time: {invoice.Time}");
+                _logger.LogInformation($"invoice.ResponsibleID: {invoice.ResponsibleID}");
 
-                TempData["Invoice"] = submitInvoice;
+                Invoice? editedInvoice = await _context.Invoices
+                    .Where(i => i.Saved != true)
+                    .FirstOrDefaultAsync();
 
-                return RedirectToAction("Create", "Imports");
+                //если не нашли строку-контейнер для записи полученных данных
+                if (editedInvoice == null)
+                {
+                    //добавляем запись о несохраненной фактуре в бд
+                    _context.Add(invoice);
+                    await _context.SaveChangesAsync();
+                }
+                else 
+                {
+                    if (await TryUpdateModelAsync(editedInvoice, 
+                        "", 
+                        i => i.ResponsibleID)
+                    )
+                    {
+                        try
+                        {
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (DbUpdateException /* ex */)
+                        {
+                            ModelState.AddModelError("", "Unable to save changes. " +
+                                "Try again, and if the problem persists, " +
+                                "see your system administrator.");
+                        }
+                    }
+                }
+
+                return RedirectToAction("Create", "Imports", new { invoiceId = editedInvoice.Id });
             
         }
 

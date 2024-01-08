@@ -17,20 +17,13 @@ namespace WarehouseSystem.Controllers.ImportsController
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Create(int? invoiceId)
         {   
             _logger.LogInformation("Get Create in Imports");
-
-            Invoice? invoice = (Invoice?)TempData["invoice"];
-            if (invoice == null)
-            {
-                _logger.LogInformation("Invoice is null!");
-            }
-            else 
-            {
-                _logger.LogInformation($"invoice.ResponsibleID: {invoice.ResponsibleID}");
-            }
             
+           //создаем объект импорта для модели
+           Import creatingImport = new Import();
+           creatingImport.InvoiceID = invoiceId;
 
             return View();
         } 

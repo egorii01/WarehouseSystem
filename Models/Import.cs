@@ -20,7 +20,7 @@ namespace WarehouseSystem.Models
         public int Quantity { get; set; }
 
         [ForeignKey(nameof(Invoice))]
-        public int InvoiceID { get; set; }
+        public int? InvoiceID { get; set; }
         public Invoice Invoice { get; set; }
 
         public Import()
