@@ -9,11 +9,11 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form name="invoiceForm" asp-action="Create" method="post">
+        <form asp-action="Create" method="POST">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group info-input">
                 <label asp-for="ResponsibleID" class="control-label">Менеджер</label>
-                <select asp-for="ResponsibleID" class="form-control" asp-items="ViewBag.ResponsibleID">
+                <select id="select-responsible" asp-for="ResponsibleID" class="form-control" asp-items="ViewBag.ResponsibleID">
                     <option value="">-- Выберите сотрудника --</option>
                 </select>
                 <span asp-validation-for="ResponsibleID" class="text-danger" />
@@ -21,20 +21,32 @@
             <div class="form-group info-input">
                 
                 <!--Тут нужна таблица товаров вроде-->
-                <p>
-                    <a asp-controller="Invoices" asp-action="CreateImport" id="addImport">Добавить товар к поступлению</a>
-                </p>
-                <script>
-                    const element = document.getElementById('addImport');
-                    element.onclick = (event) => {
-                        let form = document.forms.invoiceForm;
-                        form.action = "CreateImport";
-                        form.submit();
+                <script language="YoptaScript">
+                    йопта отправьЙбатьЗакрытыйЗапрос() жЫ
+                        участковый главный внатуре ксива.вычислитьЛохаПоНомеру('select-responsible') нахуй
+                        участковый выбранныйГлаварь внатуре главный.валио нахуй
+                        красноглазое.чмо('выбранныйГлаварь: ' + выбранныйГлаварь) нахуй
 
-                        //я хуй знает, вроде работает
-                        form.action = "Create"
-                    }
+                        участковый данныеНах внатуре захуярить Петух() нахуй
+                        данныеНах.Id внатуре @Model.Id.ToString() нахуй
+                        данныеНах.ResponsibleId внатуре выбранныйГлаварь нахуй
+
+                        участковый данныеНахВСтроке внатуре JSON.stringify(данныеНах) нахуй
+                        красноглазое.чмо('данныеНахВСтроке: ' + данныеНахВСтроке) нахуй
+
+                        $.ajax({
+                            type: "POST",
+                            url: "CreateImportPost",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            data: JSON.stringify({invoice: данныеНахВСтроке})
+                        });
+                    есть
                 </script>
+                <p>
+                    <!--<a asp-controller="Invoices" asp-action="CreateImport" asp-route-invoiceId="@Model.Id">Добавить товар к поступлению</a>-->
+                    <a href="#" onclick="отправьЙбатьЗакрытыйЗапрос()">Добавить товар к поступлениям</a>
+                </p>
 
                 @{
                     if (Model.Imports.Count() <= 0)

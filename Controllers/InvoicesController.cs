@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -105,6 +107,9 @@ namespace WarehouseSystem.Controllers
             {
                 _logger.LogInformation("Creating new invoice");
                 creatingInvoice = new Invoice();
+
+                _context.Add(creatingInvoice);
+                _context.SaveChanges();
             }
             else if (returned != true) 
             {
@@ -135,10 +140,12 @@ namespace WarehouseSystem.Controllers
             return View(invoice);
         }
 
-        public IActionResult CreateImport()
+        public async Task<IActionResult> CreateImport(int? invoiceID)
         {
             _logger.LogInformation("Redirecting to imports create");
-            return RedirectToAction("Create", "Imports");
+            _logger.LogInformation($"Invoice.Id: {invoiceID}");
+
+            return RedirectToAction("Create", "Imports", new { invoiceId = invoiceID });
         }
 
         [HttpPost]
@@ -182,6 +189,16 @@ namespace WarehouseSystem.Controllers
 
                 return RedirectToAction("Create", "Imports", new { invoiceId = editedInvoice.Id });
             
+        }
+
+        [HttpPost]
+        public JsonResult CreateImportPost([FromBody]CreateImportModel invoice)
+        {
+            
+            _logger.LogInformation($"invoice: {invoice.Invoice}");
+            
+            
+            return Json(null);
         }
 
         private void employeesDropdownList(object selectedPosition = null)
