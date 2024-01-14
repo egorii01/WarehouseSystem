@@ -23,9 +23,6 @@
             </div>
             <div id="imports-container" class="form-group info-input border rounded imports-container">
                 <div class="form-group info-input">
-                    <div id="create-import">
-                        <a href="">Добавить товар</a>
-                    </div>
                     @{
                         if (Model == null)
                         {
@@ -38,39 +35,10 @@
                         else 
                         {
 
-                            <h2>Все не так уж и плохо</h2>
-
-                            <p>Импортов: @Model.Imports.Count</p>
-
-                            <div id="imports-table">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.Imports.First().ProductID)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.Imports.First().Quantity)
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @{
-                                            foreach (Import import in Model.Imports)
-                                            {
-                                                <tr>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => import.Product.Name)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => import.Quantity);
-                                                    </td>
-                                                </tr>
-                                            }
-                                        }
-                                    </tbody>
-                                </table>
+                            <div id="imports-control">
+                                @{Html.RenderPartial("../Imports/_ImportsTable", Model.Imports);}
                             </div>
+                            
                             
                         }
                     }
@@ -89,8 +57,29 @@
     <a asp-action="Index">Назад</a>
 </div>
 
-<script language="YoptaScript">
-    
+<script type="text/javascript">
+    function showAddImport() {
+
+        var importsControl = document.getElementById('imports-control');
+
+        var addImportButtonContainer = document.getElementById('create-import');
+        $(addImportButtonContainer).empty();
+        
+        $.ajax({
+            url: 'GetCreateImportForm',
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            success: function (result) {
+                $(importsControl).html(result);
+            }
+        });
+
+    }
+
+    function test() {
+        alert("Тыкнули на вложенной форме");
+    }
 </script>
 
 @section Scripts {

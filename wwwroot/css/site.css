@@ -28,3 +28,7 @@ body {
 .imports-container {
   padding-left: 12px;
 }
+
+.btn:hover {
+  outline: 0 !important
+}

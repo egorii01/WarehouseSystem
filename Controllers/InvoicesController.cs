@@ -60,6 +60,11 @@ namespace WarehouseSystem.Controllers
             return View(new Invoice());
         }
 
+        public IActionResult GetCreateImportForm()
+        {
+            return PartialView("../Imports/_CreateImport", new Import());
+        }
+
         // POST: Invoices/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.

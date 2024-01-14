@@ -1,2 +1,11 @@
-@model IEnumerable<WarehouseSystem.Models.Import>
+@model WarehouseSystem.Models.Import
 <h1> Хуй </h1>
+@{
+    if (Model == null)
+    {
+        <p>Объект импорта не подгружен</p>
+    }
+    else {
+        <p>Объект импорта подгружен</p>
+    }
+}
