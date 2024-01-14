@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div class="form-group info-input">
-                <input type="submit" value="Создать фактуру" class="btn btn-primary" />
+                <input type="submit" value="Создать фактуру" class="btn btn-primary" onclick="saveInvoice()" />
             </div>
         </form>
     </div>
@@ -56,29 +56,6 @@
 <div>
     <a asp-action="Index">Назад</a>
 </div>
-
-<script language="javascript">
-
-    @* var addImportBtn = document.getElementById("add-import-btn");
-    addImportBtn.addEventListener("click", showAddImport);
-
-    function showAddImport() {
-
-        var importsControl = document.getElementById('imports-control');
-        
-        $.ajax({
-            url: 'GetCreateImportForm',
-            contentType: 'application/html; charset=utf-8',
-            type: 'GET',
-            dataType: 'html',
-            success: function (result) {
-                $(importsControl).html(result);
-            }
-        });
-
-    } *@
-
-</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

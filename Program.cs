@@ -10,6 +10,8 @@ builder.Services.AddDbContext<StockContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//добавление сервисы сессий
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options => 
 {
     options.IdleTimeout = TimeSpan.FromSeconds(30);

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using WarehouseSystem.Data;
 using WarehouseSystem.Models;
 
@@ -62,8 +63,30 @@ namespace WarehouseSystem.Controllers
             return View(new Invoice());
         }
 
-        public IActionResult GetCreateImportForm()
+        [HttpPost]
+        public IActionResult GetCreateImportForm([FromBody]List<Import> imports)
         {
+            if (imports != null)
+            {
+                _logger.LogInformation("imports is not null");
+                foreach (Import import in imports)
+                {
+
+                    _logger.LogInformation($"import.Product: {import.ProductID} import.Quantity: {import.Quantity}");
+
+                }
+
+                string testJson = JsonConvert.SerializeObject(imports);
+                _logger.LogInformation($"testJson: {testJson}");
+                TempData["imports"] = JsonConvert.SerializeObject(imports);
+            }
+            else 
+            {
+                _logger.LogInformation("imports is null");
+            }
+
+            
+
             ViewBag.ProductsList = getProductList();
             return PartialView("../Imports/_CreateImport", new Import());
         }
@@ -88,7 +111,39 @@ namespace WarehouseSystem.Controllers
             {
                 _logger.LogInformation($"import.Product: {import.ProductID} import.Quantity: {import.Quantity}");
             }
-            return PartialView("../Imports/_ImportsTable", new List<Import>());
+
+            string importsJson = TempData["imports"].ToString();
+            List<Import>? imports = JsonConvert.DeserializeObject<List<Import>>(importsJson);
+            
+            
+            if (imports != null)
+            {
+                _logger.LogInformation("imports is not null");
+                imports.Add(import);
+                _logger.LogInformation($"import.ProductID: {import.ProductID}");
+
+                foreach (Import importObject in imports)
+                {
+                    importObject.Product = _context.Products.Where(p => p.Id == importObject.ProductID).FirstOrDefault();
+                    
+                    if (importObject.Product == null)
+                    {
+                        _logger.LogInformation($"importObject.Product is null");
+                    }
+                    else
+                    {
+                        _logger.LogInformation($"importObject.Product is not null");
+                    }
+                }
+
+            }
+
+            _logger.LogInformation($"imports.Count: {imports.Count}");
+
+            TempData["imports"] = JsonConvert.SerializeObject(imports);
+
+            return PartialView("../Imports/_ImportsTable", imports);
+            
             //return Json(new { success = true });
 
         }
@@ -98,15 +153,31 @@ namespace WarehouseSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Time")] Invoice invoice)
+        public async Task<IActionResult> Create([Bind("Id,ResponsibleID")] Invoice invoice)
         {
-            if (ModelState.IsValid)
+
+            //десериализуем импорты, указанные в таблице на форме
+            string importsJson = TempData["imports"].ToString();
+            _logger.LogInformation($"importsJson: {importsJson}");
+            List<Import>? imports = JsonConvert.DeserializeObject<List<Import>>(importsJson);
+
+            //проставляем null в Product, чтобы не пытаться создавать существующие записи в бд
+            foreach(Import import in imports)
             {
+                import.Product = null;
+            }
+
+            //записываем импорты к фактуре
+            invoice.Imports = imports;
+            invoice.Time = DateTime.Now;
+
+            //if (ModelState.IsValid)
+            //{
                 _context.Add(invoice);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            return View(invoice);
+            // }
+            // return View(invoice);
         }
 
         private void employeesDropdownList(object selectedPosition = null)

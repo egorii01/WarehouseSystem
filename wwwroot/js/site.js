@@ -3,23 +3,6 @@
 
 // Write your JavaScript code.
 
-function showCreateImportForm() {
-
-    var importsControl = document.getElementById('imports-control');
-    $(importsControl).empty();
-        
-    $.ajax({
-        url: 'GetCreateImportForm',
-        contentType: 'application/html; charset=utf-8',
-        type: 'GET',
-        dataType: 'html',
-        success: function (result) {
-            $(importsControl).html(result);
-        }
-    });
-
-}
-
 function addImport() {
 
     var productSelect = document.getElementById("product-select");

@@ -23,7 +23,7 @@
                             @Html.DisplayFor(modelItem => import.Product.Name)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => import.Quantity);
+                            @Html.DisplayFor(modelItem => import.Quantity)
                         </td>
                     </tr>
                 }
@@ -31,3 +31,26 @@
         </tbody>
     </table>
 </div>
+
+<script type="text/javascript">
+
+    function showCreateImportForm() {
+
+        var importsControl = document.getElementById('imports-control');
+        $(importsControl).empty();
+        
+            
+        $.ajax({
+            url: 'GetCreateImportForm',
+            contentType: 'application/json; charset=utf-8',
+            type: 'POST',
+            dataType: 'html',
+            data: JSON.stringify(@Html.Raw(Json.Serialize(Model))),
+            success: function (result) {
+                $(importsControl).html(result);
+            }
+        });
+
+    }
+
+</script>
