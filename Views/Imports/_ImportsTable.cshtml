@@ -38,6 +38,8 @@
 
         var importsControl = document.getElementById('imports-control');
         $(importsControl).empty();
+        var createInvoiceBtn = document.getElementById('create-invoice-btn');
+        createInvoiceBtn.setAttribute("disabled", "disabled");
         
             
         $.ajax({

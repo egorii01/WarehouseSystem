@@ -17,6 +17,9 @@ function addImport() {
 
     var importsControl = document.getElementById('imports-control');
 
+    var createInvoiceButton = document.getElementById('create-invoice-btn');
+    createInvoiceButton.removeAttribute("disabled");
+
     $.ajax({
         url: "UpdateImports",
         type: 'POST',
