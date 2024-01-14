@@ -1,0 +1,20 @@
+@model WarehouseSystem.Models.Import
+
+<h5>Добавление товара к фактуре</h5>
+<div class="row">
+    <div class="form-group info-input">
+        <label asp-for="ProductID" class="control-label"></label>
+        <select id="product-select" asp-for="ProductID" class="form-control" asp-items="ViewBag.ProductsList">
+            <option value="">-- Выберите товар --</option>
+        </select>
+        <span asp-validation-for="ProductID" class="text-danger"></span>
+    </div>
+    <div class="form-group info-input">
+        <label asp-for="Quantity" class="control-label"></label>
+        <input id="quantity-input" asp-for="Quantity" class="form-control" />
+        <span asp-validation-for="Quantity" class="text-danger"></span>
+    </div>
+    <div class="form-group info-input">
+        <input id="create-import-btn" type="button" value="Добавить товар" class="btn btn-secondary" onclick="addImport()" />
+    </div>
+</div>

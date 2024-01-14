@@ -13,10 +13,12 @@ namespace WarehouseSystem.Controllers
     public class InvoicesController : Controller
     {
         private readonly StockContext _context;
+        private readonly ILogger<Invoice> _logger;
 
-        public InvoicesController(StockContext context)
+        public InvoicesController(StockContext context, ILogger<Invoice> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Invoices
@@ -62,7 +64,33 @@ namespace WarehouseSystem.Controllers
 
         public IActionResult GetCreateImportForm()
         {
+            ViewBag.ProductsList = getProductList();
             return PartialView("../Imports/_CreateImport", new Import());
+        }
+
+        private SelectList getProductList(object selectedPosition = null)
+        {
+            var productQuery = from p in _context.Products
+            orderby p.Name
+            select p;
+
+            return new SelectList(productQuery.AsNoTracking(), "Id", "Name", selectedPosition);
+        } 
+
+        [HttpPost]
+        public ActionResult UpdateImports([FromBody]Import import) 
+        {
+            if (import == null)
+            {
+                _logger.LogInformation("import is null");
+            }
+            else
+            {
+                _logger.LogInformation($"import.Product: {import.ProductID} import.Quantity: {import.Quantity}");
+            }
+            return PartialView("../Imports/_ImportsTable", new List<Import>());
+            //return Json(new { success = true });
+
         }
 
         // POST: Invoices/Create

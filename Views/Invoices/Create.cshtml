@@ -36,7 +36,7 @@
                         {
 
                             <div id="imports-control">
-                                @{Html.RenderPartial("../Imports/_ImportsTable", Model.Imports);}
+                                @{await Html.RenderPartialAsync("../Imports/_ImportsTable", Model.Imports);}
                             </div>
                             
                             
@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div class="form-group info-input">
-                <input type="submit" value="Добавить поступление" class="btn btn-primary" />
+                <input type="submit" value="Создать фактуру" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -57,13 +57,14 @@
     <a asp-action="Index">Назад</a>
 </div>
 
-<script type="text/javascript">
+<script language="javascript">
+
+    @* var addImportBtn = document.getElementById("add-import-btn");
+    addImportBtn.addEventListener("click", showAddImport);
+
     function showAddImport() {
 
         var importsControl = document.getElementById('imports-control');
-
-        var addImportButtonContainer = document.getElementById('create-import');
-        $(addImportButtonContainer).empty();
         
         $.ajax({
             url: 'GetCreateImportForm',
@@ -75,11 +76,8 @@
             }
         });
 
-    }
+    } *@
 
-    function test() {
-        alert("Тыкнули на вложенной форме");
-    }
 </script>
 
 @section Scripts {
