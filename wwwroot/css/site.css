@@ -24,3 +24,7 @@ body {
 .info-input {
   margin-bottom: 10px;
 }
+
+.imports-container {
+  padding-left: 12px;
+}

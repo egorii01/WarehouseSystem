@@ -23,20 +23,12 @@ namespace WarehouseSystem.Controllers
         public async Task<IActionResult> Index()
         {
 
-            /*var employee = _context.Employees.Where(e => e.Actual != false);
-            var employees = employee.Include(e => e.Position);
-
-            foreach (Employee e in employees)
-            {
-                _context.Positions.Where(p => p.Id == e.Position.Id).Load();
-            }
-            return View(await employees.ToListAsync());*/
-
             var invoices = _context.Invoices.Include(i => i.Responsible);
 
             foreach (Invoice i in invoices)
             {
                 _context.Employees.Where(e => e.Id == i.ResponsibleID).Load();
+
             }
 
             return View(await _context.Invoices.ToListAsync());
@@ -63,7 +55,9 @@ namespace WarehouseSystem.Controllers
         // GET: Invoices/Create
         public IActionResult Create()
         {
-            return View();
+
+            employeesDropdownList();
+            return View(new Invoice());
         }
 
         // POST: Invoices/Create
@@ -80,6 +74,16 @@ namespace WarehouseSystem.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(invoice);
+        }
+
+        private void employeesDropdownList(object selectedPosition = null)
+        {
+            var employeesQuery = from e in _context.Employees
+            orderby e.Id
+            where e.Actual != false
+            select e;
+
+            ViewBag.ResponsibleID = new SelectList(employeesQuery.AsNoTracking(), "Id", "FullName", selectedPosition);
         }
 
         // GET: Invoices/Edit/5

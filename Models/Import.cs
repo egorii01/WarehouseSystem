@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace WarehouseSystem.Models
 {
 
@@ -7,10 +9,12 @@ namespace WarehouseSystem.Models
 
         public int Id { get; set; }
 
+        [Display(Name = "Товар")]
         public int ProductID { get; set; }
 
         public Product? Product { get; set; }
 
+        [Display(Name = "Количество")]
         public int Quantity { get; set; }
 
         public int InvoiceID { get; set; }

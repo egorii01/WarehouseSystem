@@ -19,7 +19,13 @@ namespace WarehouseSystem.Models
         [Display(Name = "ФИО ответственного")]
         public Employee Responsible { get; set; }
 
+        [Display(Name = "Список поступивших товаров")]
         public ICollection<Import> Imports { get; set; }
+
+        public Invoice()
+        {
+            Imports = new List<Import>();
+        }
 
     }
 

@@ -1,32 +1,97 @@
 @model WarehouseSystem.Models.Invoice
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Добавление поступления";
 }
 
-<h1>Create</h1>
+<h1>Новая фактура</h1>
 
-<h4>Invoice</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Time" class="control-label"></label>
-                <input asp-for="Time" class="form-control" />
-                <span asp-validation-for="Time" class="text-danger"></span>
+            <div class="form-group info-input">
+                <label asp-for="ResponsibleID" class="control-label"></label>
+                <select asp-for="ResponsibleID" class="form-control" asp-items="ViewBag.ResponsibleID">
+                    <option value="">-- Выберите сотрудника --</option>
+                </select>
+                <span asp-validation-for="ResponsibleID" class="text-danger" />
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="form-group info-input">
+                <label asp-for="Imports" class="control-label"></label>
+            </div>
+            <div id="imports-container" class="form-group info-input border rounded imports-container">
+                <div class="form-group info-input">
+                    <div id="create-import">
+                        <a href="">Добавить товар</a>
+                    </div>
+                    @{
+                        if (Model == null)
+                        {
+                            <h2>Хуета</h2>
+                        }
+                        //else if (Model.Imports.Count == 0) 
+                        //{
+                          //  <p>Товары отсутствуют</p>
+                        //}
+                        else 
+                        {
+
+                            <h2>Все не так уж и плохо</h2>
+
+                            <p>Импортов: @Model.Imports.Count</p>
+
+                            <div id="imports-table">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Imports.First().ProductID)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Imports.First().Quantity)
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            foreach (Import import in Model.Imports)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => import.Product.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => import.Quantity);
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        }
+                    }
+                    
+                    
+                </div>
+            </div>
+            <div class="form-group info-input">
+                <input type="submit" value="Добавить поступление" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Назад</a>
 </div>
+
+<script language="YoptaScript">
+    
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
