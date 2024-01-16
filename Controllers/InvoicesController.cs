@@ -46,11 +46,21 @@ namespace WarehouseSystem.Controllers
             }
 
             var invoice = await _context.Invoices
+                .Include(i => i.Responsible)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            
             if (invoice == null)
             {
                 return NotFound();
             }
+
+            var imports = await _context.Imports
+                .Where(i => i.InvoiceID == id)
+                .Include(i => i.Product)
+                .ToListAsync();
+
+            invoice.Imports = imports;
 
             return View(invoice);
         }
