@@ -14,6 +14,8 @@ namespace WarehouseSystem.Models
 
         public ICollection<CheckEntry> CheckEntries { get; set; }
 
+        public bool Actual { get; set; }
+
     }
 
 }
