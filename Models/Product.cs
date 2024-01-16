@@ -16,6 +16,8 @@ namespace WarehouseSystem.Models
         [Display(Name = "Цена")]
         public decimal Price { get; set; }
 
+        public bool Actual { get; set; } = true;
+
     }
 }
 
