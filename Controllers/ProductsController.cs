@@ -23,7 +23,11 @@ namespace WarehouseSystem.Controllers
         public async Task<IActionResult> Index()
         {
 
-            return View(await _context.Products.ToListAsync());
+            List<Product> actualProducts = await _context.Products
+                .Where(p => p.Actual != false)
+                .ToListAsync();
+
+            return View(actualProducts);
 
         }
 
@@ -50,6 +54,65 @@ namespace WarehouseSystem.Controllers
             }
             
             return View(product);
+        }
+
+        // GET: Employers/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
+
+        // POST: Employers/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            //ищем "удаляемого" сотрудника
+            var product = await _context.Products.FindAsync(id);
+            if (product != null)
+            {
+                //проставляем флаг актуальности
+                product.Actual = false;
+                
+                if (await TryUpdateModelAsync(product, 
+                    "", 
+                    e => e.Actual)
+                )
+                {
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateException /* ex */)
+                    {
+                        ModelState.AddModelError("", "Unable to save changes. " +
+                            "Try again, and if the problem persists, " +
+                            "see your system administrator.");
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool ProductExists(int id)
+        {
+            return _context.Products.Any(p => p.Id == id);
         }
 
     }
