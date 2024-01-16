@@ -26,7 +26,9 @@ namespace WarehouseSystem.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var invoices = _context.Invoices.Include(i => i.Responsible);
+            var invoices = _context.Invoices
+                .Where(i => i.Actual != false)
+                .Include(i => i.Responsible);
 
             foreach (Invoice i in invoices)
             {
@@ -34,7 +36,7 @@ namespace WarehouseSystem.Controllers
 
             }
 
-            return View(await _context.Invoices.ToListAsync());
+            return View(await invoices.ToListAsync());
         }
 
         // GET: Invoices/Details/5
@@ -104,6 +106,7 @@ namespace WarehouseSystem.Controllers
         private SelectList getProductList(object selectedPosition = null)
         {
             var productQuery = from p in _context.Products
+            where p.Actual != false
             orderby p.Name
             select p;
 
@@ -200,57 +203,6 @@ namespace WarehouseSystem.Controllers
             ViewBag.ResponsibleID = new SelectList(employeesQuery.AsNoTracking(), "Id", "FullName", selectedPosition);
         }
 
-        // GET: Invoices/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var invoice = await _context.Invoices.FindAsync(id);
-            if (invoice == null)
-            {
-                return NotFound();
-            }
-            return View(invoice);
-        }
-
-        // POST: Invoices/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Time")] Invoice invoice)
-        {
-            if (id != invoice.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(invoice);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InvoiceExists(invoice.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(invoice);
-        }
-
         // GET: Invoices/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -260,11 +212,20 @@ namespace WarehouseSystem.Controllers
             }
 
             var invoice = await _context.Invoices
+                .Include(i => i.Responsible)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (invoice == null)
             {
                 return NotFound();
             }
+
+            var imports = await _context.Imports
+                .Where(i => i.InvoiceID == id)
+                .Include(i => i.Product)
+                .ToListAsync();
+
+            invoice.Imports = imports;
 
             return View(invoice);
         }
@@ -277,7 +238,7 @@ namespace WarehouseSystem.Controllers
             var invoice = await _context.Invoices.FindAsync(id);
             if (invoice != null)
             {
-                _context.Invoices.Remove(invoice);
+                invoice.Actual = false;
             }
 
             await _context.SaveChangesAsync();

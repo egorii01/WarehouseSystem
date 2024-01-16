@@ -56,6 +56,59 @@ namespace WarehouseSystem.Controllers
             return View(product);
         }
 
+
+        // GET: Employers/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var product = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
+
+        // POST: Employers/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost, ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditPost(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var productToUpdate = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+
+            if (await TryUpdateModelAsync<Product>(productToUpdate, 
+                "", 
+                p => p.Price)
+            )
+            {
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException /* ex */)
+                {
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(productToUpdate);
+        }
+
         // GET: Employers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

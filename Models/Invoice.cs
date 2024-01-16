@@ -22,6 +22,8 @@ namespace WarehouseSystem.Models
         [Display(Name = "Список поступивших товаров")]
         public ICollection<Import> Imports { get; set; }
 
+        public bool Actual { get; set; } = true;
+
         public Invoice()
         {
             Imports = new List<Import>();
