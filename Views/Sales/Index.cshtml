@@ -1,0 +1,52 @@
+@model IEnumerable<WarehouseSystem.Models.Check>
+
+@{
+    ViewData["Title"] = "Продажи";
+}
+
+<h1>Продажи</h1>
+
+<p>
+    <a asp-action="Create">Создать чек</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Time)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cashier)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GeneralAmount)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Time)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cashier.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GeneralAmount)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">Подробнее</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
