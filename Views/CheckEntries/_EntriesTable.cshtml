@@ -1,1 +1,58 @@
-@model IEnumerable<WarehouseSystem.Models.CheckEntry>
+@model IEnumerable<WarehouseSystem.Models.Import>
+<div id="create-import">
+    <button id="add-import-btn" type="button" class="btn btn-link shadow-none" onclick="showCreateImportForm()">Добавить товар</button>
+</div>
+<div id="imports-table">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().ProductID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Quantity)
+                </th>
+                </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (Import import in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => import.Product.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => import.Quantity)
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    function showCreateImportForm() {
+
+        var importsControl = document.getElementById('imports-control');
+        $(importsControl).empty();
+        var createInvoiceBtn = document.getElementById('create-invoice-btn');
+        createInvoiceBtn.setAttribute("disabled", "disabled");
+        
+            
+        $.ajax({
+            url: 'GetCreateImportForm',
+            contentType: 'application/json; charset=utf-8',
+            type: 'POST',
+            dataType: 'html',
+            data: JSON.stringify(@Html.Raw(Json.Serialize(Model))),
+            success: function (result) {
+                $(importsControl).html(result);
+            }
+        });
+
+    }
+
+</script>
