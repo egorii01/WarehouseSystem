@@ -18,7 +18,15 @@ namespace WarehouseSystem.Models
         [Display(Name = "Стоимость")]
         public decimal Amount 
         {
-            get { return Product.Price * Quantity; }
+            get 
+            { 
+                if (Product == null)
+                {
+                    return 0;
+                }
+                
+                return Product.Price * Quantity; 
+            }
         }
 
     }

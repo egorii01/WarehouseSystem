@@ -13,7 +13,7 @@ namespace WarehouseSystem.Models
         [Display(Name = "Наименование")]
         public string Name { get; set; }
 
-        [Display(Name = "Цена")]
+        [Display(Name = "Цена за единицу")]
         public decimal Price { get; set; }
 
         public bool Actual { get; set; } = true;

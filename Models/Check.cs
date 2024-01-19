@@ -18,7 +18,7 @@ namespace WarehouseSystem.Models
         [Display(Name = "Дата и время создания")]
         public DateTime Time { get; set; }
 
-        [Display(Name = "Стоимость")]
+        [Display(Name = "Итоговая стоимость")]
         public decimal GeneralAmount 
         {
             get 
@@ -37,6 +37,11 @@ namespace WarehouseSystem.Models
         public ICollection<CheckEntry> CheckEntries { get; set; }
 
         public bool Actual { get; set; }
+
+        public Check()
+        {
+            CheckEntries = new List<CheckEntry>();
+        }
 
     }
 

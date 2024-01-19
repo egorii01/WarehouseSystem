@@ -1,0 +1,21 @@
+@model WarehouseSystem.Models.CheckEntry
+
+@{
+    if (Model.Product != null)
+    {
+        <div id="initial-price" class="row">
+            <label asp-for="Product.Price" class="control-label col-4"></label>
+            <div class="col-4"></div>
+            <div class="col-4">
+                @Html.DisplayFor(model => model.Product.Price)
+            </div>
+        </div>
+        <div id="total-price" class="row fw-bold">
+            <label asp-for="Amount" class="control-label col-4"></label>
+            <div class="col-4"></div>
+            <div class="col-4">
+                @Html.DisplayFor(model => model.Amount)
+            </div>
+        </div>
+    }
+}

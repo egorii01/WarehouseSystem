@@ -1,14 +1,14 @@
 @model WarehouseSystem.Models.Check
 
 @{
-    ViewData["Title"] = "Добавление поступления";
+    ViewData["Title"] = "Новый чек";
 }
 
-<h1>Новая фактура</h1>
+<h1>Новый чек</h1>
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group info-input">
@@ -39,7 +39,9 @@
                                 @{await Html.RenderPartialAsync("../CheckEntries/_EntriesTable", Model.CheckEntries);}
                             </div>
                             
-                            
+                            <div id="general-amount" class="row">
+                                @{await Html.RenderPartialAsync("_GeneralAmount", Model);}
+                            </div>
                         }
                     }
                     
@@ -60,3 +62,37 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script language="YoptaScript">
+    йопта поменяйХуету() жЫ
+        участковый ценникЕпт внатуре ксива.вычислитьЛохаПоНомеру('price-info') нахуй
+        красноглазое.чмо(ценникЕпт) нахуй
+
+        участковый выборХуеты внатуре ксива.вычислитьЛохаПоНомеру('product-select') нахуй
+        участковый номерВыбраннойХуеты внатуре выборХуеты.валио нахуй
+
+        участковый вводСколькоНадоХуеты внатуре ксива.вычислитьЛохаПоНомеру('quantity-input') нахуй
+        участковый сколькоНадоХуеты внатуре вводСколькоНадоХуеты.валио нахуй
+        красноглазое.чмо(сколькоНадоХуеты) нахуй
+        
+        участковый заебисьДанные внатуре чобля этоНихуя(шнырятьПоКарманам(номерВыбраннойХуеты))
+            ичо чобля этоНихуя(шнырятьПоКарманам(сколькоНадоХуеты)) нахуй
+
+        участковый посылкаЕпт внатуре жЫ есть нахуй
+        вилкойвглаз (заебисьДанные) жЫ
+            посылкаЕпт.ProductID внатуре шнырятьПоКарманам(номерВыбраннойХуеты) нахуй
+            посылкаЕпт.Quantity внатуре шнырятьПоКарманам(сколькоНадоХуеты) нахуй
+        есть
+
+        $.ajax({
+            url: "GetProductPrice",
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'html',
+            data: JSON.stringify(посылкаЕпт),
+            success: йопта (опаЧеПришло) жЫ
+                $(ценникЕпт).html(опаЧеПришло) нахуй
+            есть
+        }) нахуй
+    есть
+</script>

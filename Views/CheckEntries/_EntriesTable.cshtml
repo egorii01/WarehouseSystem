@@ -1,6 +1,6 @@
-@model IEnumerable<WarehouseSystem.Models.Import>
+@model IEnumerable<WarehouseSystem.Models.CheckEntry>
 <div id="create-import">
-    <button id="add-import-btn" type="button" class="btn btn-link shadow-none" onclick="showCreateImportForm()">Добавить товар</button>
+    <button id="add-import-btn" type="button" class="btn btn-link shadow-none" onclick="showCreateEntryForm()">Добавить товар</button>
 </div>
 <div id="imports-table">
     <table class="table">
@@ -12,18 +12,24 @@
                 <th>
                     @Html.DisplayNameFor(model => model.First().Quantity)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Product.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Amount)
+                </th>
                 </tr>
         </thead>
         <tbody>
             @{
-                foreach (Import import in Model)
+                foreach (CheckEntry entry in Model)
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => import.Product.Name)
+                            @Html.DisplayFor(modelItem => entry.Product.Name)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => import.Quantity)
+                            @Html.DisplayFor(modelItem => entry.Quantity)
                         </td>
                     </tr>
                 }
@@ -34,7 +40,7 @@
 
 <script type="text/javascript">
 
-    function showCreateImportForm() {
+    function showCreateEntryForm() {
 
         var importsControl = document.getElementById('imports-control');
         $(importsControl).empty();
@@ -43,7 +49,7 @@
         
             
         $.ajax({
-            url: 'GetCreateImportForm',
+            url: 'GetCreateEntryForm',
             contentType: 'application/json; charset=utf-8',
             type: 'POST',
             dataType: 'html',
