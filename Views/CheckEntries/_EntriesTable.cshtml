@@ -1,4 +1,6 @@
 @model IEnumerable<WarehouseSystem.Models.CheckEntry>
+@using System.Linq
+@using System.Globalization
 <div id="create-import">
     <button id="add-import-btn" type="button" class="btn btn-link shadow-none" onclick="showCreateEntryForm()">Добавить товар</button>
 </div>
@@ -31,11 +33,30 @@
                         <td>
                             @Html.DisplayFor(modelItem => entry.Quantity)
                         </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => entry.Product.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => entry.Amount)
+                        </td>
                     </tr>
                 }
             }
         </tbody>
     </table>
+</div>
+<div class="row fw-bold">
+    <div class = "col-4">
+        <label class="control-label">Сумма:</label>
+    </div>
+    <div class="col-4"></div>
+    <div class="col-4">
+        @{
+            var format = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
+            format.NumberGroupSeparator = " ";
+        }
+        @Model.Sum(e => e.Amount).ToString("0.00")
+    </div>
 </div>
 
 <script type="text/javascript">

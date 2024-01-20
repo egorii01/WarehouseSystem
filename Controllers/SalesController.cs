@@ -124,6 +124,47 @@ namespace WarehouseSystem.Controllers
             return PartialView("../CheckEntries/_PriceInfo");
         } 
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateEntries([FromBody]CheckEntry entry)
+        {
+
+            if (entry == null)
+            {
+                _logger.LogWarning("entry is null!");
+            }
+            else
+            {
+                _logger.LogInformation("entry is not null");
+            }
+
+            string entryJson = TempData["entries"].ToString();
+            List<CheckEntry>? entries = JsonConvert.DeserializeObject<List<CheckEntry>>(entryJson);
+
+            if (entries != null)
+            {
+                _logger.LogInformation("entries is not null");
+                entries.Add(entry);
+
+                foreach (CheckEntry entryObject in entries)
+                {
+                    entryObject.Product = _context.Products.Where(p => p.Id == entryObject.ProductID).FirstOrDefault();
+
+                    if (entryObject.Product == null)
+                    {
+                        _logger.LogInformation("entryObject.Product is null");
+                    }
+                    else 
+                    {
+                        _logger.LogInformation("entryObject.Product is not null");
+                    }
+                }
+            }
+
+            TempData["entries"] = JsonConvert.SerializeObject(entries);
+
+            return PartialView("../CheckEntries/_EntriesTable", entries);
+        }
+
     }
 
 }

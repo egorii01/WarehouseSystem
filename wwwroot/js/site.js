@@ -33,3 +33,31 @@ function addImport() {
     });
 
 }
+
+function addCheckEntry() {
+
+    let productSelect = document.getElementById('product-select');
+    let quantityInput = document.getElementById('quantity-input');
+
+    var checkEntryData = {
+        "ProductID": productSelect.value,
+        "Quantity": quantityInput.value
+    };
+
+    var importsControl = document.getElementById('imports-control');
+
+    var createInvoiceButton = document.getElementById('create-invoice-btn');
+    createInvoiceButton.removeAttribute("disabled");
+
+    $.ajax({
+        url: "UpdateEntries",
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        dataType: 'html',
+        data: JSON.stringify(checkEntryData),
+        success: function (result) {
+            $(importsControl).html(result);
+        }
+    });
+
+}

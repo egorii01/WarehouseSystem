@@ -38,10 +38,7 @@
                             <div id="imports-control">
                                 @{await Html.RenderPartialAsync("../CheckEntries/_EntriesTable", Model.CheckEntries);}
                             </div>
-                            
-                            <div id="general-amount" class="row">
-                                @{await Html.RenderPartialAsync("_GeneralAmount", Model);}
-                            </div>
+
                         }
                     }
                     

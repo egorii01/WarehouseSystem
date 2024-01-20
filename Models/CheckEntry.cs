@@ -24,7 +24,7 @@ namespace WarehouseSystem.Models
                 {
                     return 0;
                 }
-                
+
                 return Product.Price * Quantity; 
             }
         }
