@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,7 @@ namespace WarehouseSystem.Controllers
         {
 
             var sales = _context.Checks
+                .Where(s => s.Actual != false)
                 .Include(s => s.Cashier);
 
             foreach (Check sale in sales)
@@ -193,6 +195,76 @@ namespace WarehouseSystem.Controllers
             check.Actual = true;
 
             _context.Add(check);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var sale = await _context.Checks
+                .Include(s => s.Cashier)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (sale == null)
+            {
+                return NotFound();
+            }
+
+            var entries = await _context.CheckEntries
+                .Where(e => e.CheckId == id)
+                .Include(e => e.Product)
+                .ToListAsync();
+
+            sale.CheckEntries = entries;
+
+            return View(sale);
+
+        }
+
+        // GET: Invoices/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var invoice = await _context.Checks
+                .Include(i => i.Cashier)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (invoice == null)
+            {
+                return NotFound();
+            }
+
+            var imports = await _context.CheckEntries
+                .Where(i => i.CheckId == id)
+                .Include(i => i.Product)
+                .ToListAsync();
+
+            invoice.CheckEntries = imports;
+
+            return View(invoice);
+        }
+
+        // POST: Invoices/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var invoice = await _context.Checks.FindAsync(id);
+            if (invoice != null)
+            {
+                invoice.Actual = false;
+            }
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

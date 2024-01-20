@@ -1,10 +1,12 @@
 @model WarehouseSystem.Models.Check
 
 @{
-    ViewData["Title"] = "Фактура";
+    ViewData["Title"] = "Удаление чека";
 }
 
-<h1>Фактура</h1>
+<h1>Удаление чека</h1>
+
+<h3>Вы уверены, что хотите удалить чек?</h3>
 
 <div>
     <hr />
@@ -91,6 +93,8 @@
 
     </div>
 </div>
-<div>
-    <a asp-action="Index">Назад</a>
-</div>
+<form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить" class="btn btn-danger" /> |
+        <a asp-action="Index">К списку чеков</a>
+</form>
