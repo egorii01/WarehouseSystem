@@ -1,0 +1,86 @@
+@model WarehouseSystem.Models.Check
+
+@{
+    ViewData["Title"] = "Фактура";
+}
+
+<h1>Фактура</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Time)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Time)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Cashier)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Cashier.FullName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <div class="form-group info-input">
+        <dt class = "col-sm-12">
+            <label asp-for="CheckEntries" class="control-label"></label>
+        </dt>
+    </div>
+    <div id="imports-table" class = "border rounded imports-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CheckEntries.First().ProductID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CheckEntries.First().Quantity)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CheckEntries.First().Product.Price)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CheckEntries.First().Amount)
+                    </th>
+                    </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (CheckEntry entry in Model.CheckEntries)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => entry.Product.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => entry.Quantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => entry.Product.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => entry.Amount)
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Назад</a>
+</div>
