@@ -15,6 +15,8 @@ namespace WarehouseSystem.Models
         [Display(Name = "Количество")]
         public int Quantity { get; set; }
 
+        public int CheckId { get; set; }
+
         [Display(Name = "Стоимость")]
         public decimal Amount 
         {

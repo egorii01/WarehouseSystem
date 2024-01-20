@@ -31,6 +31,12 @@ namespace WarehouseSystem.Controllers
             foreach (Check sale in sales)
             {
                 _context.Employees.Where(e => e.Id == sale.CashierID).Load();
+                sale.CheckEntries = await _context.CheckEntries.Where(e => e.CheckId == sale.Id).ToListAsync();
+
+                foreach (CheckEntry entry in sale.CheckEntries)
+                {
+                    entry.Product = _context.Products.Where(p => p.Id == entry.ProductID).FirstOrDefault();
+                }
             }
 
 
@@ -163,6 +169,32 @@ namespace WarehouseSystem.Controllers
             TempData["entries"] = JsonConvert.SerializeObject(entries);
 
             return PartialView("../CheckEntries/_EntriesTable", entries);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id, CashierID")]Check check)
+        {
+
+            //десериализуем позиции чека
+            string entriesJson = TempData["entries"].ToString();
+            _logger.LogInformation($"entriesJson: {entriesJson}");
+            List<CheckEntry>? entries = JsonConvert.DeserializeObject<List<CheckEntry>>(entriesJson);
+            
+            //проставляем null у товаров, чтобы не пытаться создать существующие записи в БД
+            foreach (CheckEntry entry in entries)
+            {
+                entry.Product = null;
+            }
+
+            //записываем позиции чека к чеку
+            check.CheckEntries = entries;
+            check.Time = DateTime.Now;
+            check.Actual = true;
+
+            _context.Add(check);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
     }
