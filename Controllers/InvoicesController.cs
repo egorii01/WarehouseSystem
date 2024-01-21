@@ -174,9 +174,33 @@ namespace WarehouseSystem.Controllers
             _logger.LogInformation($"importsJson: {importsJson}");
             List<Import>? imports = JsonConvert.DeserializeObject<List<Import>>(importsJson);
 
-            //проставляем null в Product, чтобы не пытаться создавать существующие записи в бд
+            
             foreach(Import import in imports)
             {
+                
+                Stock? stockData = _context.StockRecords
+                    .Where(d => d.ProductId == import.ProductID)
+                    .FirstOrDefault();
+
+                //если не найдено записи о наличии данного товара на складе, то создаем ее
+                if (stockData == null)
+                {
+                    stockData = new Stock()
+                    {
+                        ProductId = import.ProductID,
+                        Quantity = import.Quantity
+                    };
+
+                    _context.Add(stockData);
+
+                    
+                }
+                else
+                {
+                    stockData.Quantity += import.Quantity;
+                }
+
+                //проставляем null в Product, чтобы не пытаться создавать существующие записи в бд
                 import.Product = null;
             }
 

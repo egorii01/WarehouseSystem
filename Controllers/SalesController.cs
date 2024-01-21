@@ -186,6 +186,23 @@ namespace WarehouseSystem.Controllers
             //проставляем null у товаров, чтобы не пытаться создать существующие записи в БД
             foreach (CheckEntry entry in entries)
             {
+
+                Stock? stock = _context.StockRecords
+                    .Where(s => s.ProductId == entry.ProductID)
+                    .FirstOrDefault();
+
+                if (stock == null)
+                {
+                    //TODO: нужно как-то обработать отсутствие товаров на складе
+                }
+                else
+                {
+
+                    stock.Quantity -= entry.Quantity;
+
+                }
+
+
                 entry.Product = null;
             }
 

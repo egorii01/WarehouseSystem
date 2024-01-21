@@ -19,7 +19,10 @@ public class StockController : Controller
 
     public async Task<IActionResult> Index()
     {
-        return View(await _context.StockRecords.ToListAsync());
+
+        List<Stock> stock = await _context.StockRecords
+            .Include(s => s.Product).ToListAsync();
+        return View(stock);
     }
 
     public async Task<IActionResult> Create()
