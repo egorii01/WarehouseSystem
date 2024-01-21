@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WarehouseSystem.Data;
 using WarehouseSystem.Models;
 
@@ -16,7 +17,12 @@ public class StockController : Controller
         _context = context;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
+    {
+        return View(await _context.StockRecords.ToListAsync());
+    }
+
+    public async Task<IActionResult> Create()
     {
         return View();
     }
