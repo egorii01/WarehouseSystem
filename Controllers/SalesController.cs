@@ -58,7 +58,7 @@ namespace WarehouseSystem.Controllers
         {
             var employeesQuery = from e in _context.Employees
             orderby e.Id
-            where (e.Actual != false && e.Position.Name == "Кассир") 
+            where e.Actual != false && e.Position.Name == "Кассир" 
             select e;
 
             ViewBag.CashierID = new SelectList(employeesQuery.AsNoTracking(), "Id", "FullName", selectedPosition);
@@ -97,6 +97,7 @@ namespace WarehouseSystem.Controllers
         private SelectList getProductList(object selectedPosition = null)
         {
             var productQuery = from p in _context.Products
+            join s in _context.StockRecords on p.Id equals s.ProductId
             where p.Actual != false
             orderby p.Name
             select p;
@@ -130,6 +131,26 @@ namespace WarehouseSystem.Controllers
             }
 
             return PartialView("../CheckEntries/_PriceInfo");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetProductStockQuantity([FromBody] CheckEntry entry)
+        {
+
+            Stock? stockProductRecord = await _context.StockRecords
+                .Where(s => s.ProductId == entry.ProductID)
+                .FirstOrDefaultAsync();
+
+            if (stockProductRecord != null) 
+            {
+                entry.MaxQuantity = stockProductRecord.Quantity;
+            }
+            else
+            {
+                entry.MaxQuantity = 0;
+            }
+
+            return Json(entry);
         } 
 
         [HttpPost]

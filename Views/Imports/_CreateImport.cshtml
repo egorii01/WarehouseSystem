@@ -11,7 +11,7 @@
     </div>
     <div class="form-group info-input">
         <label asp-for="Quantity" class="control-label"></label>
-        <input id="quantity-input" asp-for="Quantity" class="form-control" />
+        <input type="number" min="0" id="quantity-input" asp-for="Quantity" class="form-control" />
         <span asp-validation-for="Quantity" class="text-danger"></span>
     </div>
     <div class="form-group info-input">

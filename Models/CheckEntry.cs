@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WarehouseSystem.Models
 {
@@ -16,6 +17,9 @@ namespace WarehouseSystem.Models
         public int Quantity { get; set; }
 
         public int CheckId { get; set; }
+
+        [NotMapped]
+        public int MaxQuantity { get; set; }
 
         [Display(Name = "Стоимость")]
         public decimal Amount 
